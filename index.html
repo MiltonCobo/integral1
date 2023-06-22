@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teorema do Valor Médio</title>
+
+
+  <link rel="stylesheet" type="text/css" href="https://jsxgraph.org/distrib/jsxgraph.css" />
+  <script type="text/javascript" src="https://jsxgraph.org/distrib/jsxgraphcore.js"></script>
+
+
+  <style>
+    html,
+    body {
+      height: 100%;
+      width: 100%;
+      margin: 0;
+    }
+
+    #wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100%;
+      width: 100%;
+      padding-top: 5%;
+    }
+
+    #jxgbox {
+      flex: 1;
+      width: 80%;
+      height: 60%;
+    }
+
+    /* .jxgbox {
+      background-color: 'blue';
+    } */
+  </style>
+</head>
+
+<body>
+  <div id="wrapper" style="background-color: lightgray; color: blue ">
+    A integral definida...
+    <div id="jxgbox" class="jxgbox">  </div>
+  </div>
+
+
+  <script>
+let board = JXG.JSXGraph.initBoard('jxgbox', {axis:true, boundingbox: [-5, 2, 5, -2]});
+let s = board.create('slider',[[1,-0.5],[5,-0.5],[1,10,100]],{name:'n',snapWidth:1});
+let a = board.create('slider',[[1,-1],[5,-1],[-10,-2,0]],{name:'start'});
+let b = board.create('slider',[[1,-1.5],[5,-1.5],[0,3,10]],{name:'end'});
+
+let side = 'left'
+
+let butt = board.create('button', [3, 1.5, 'Left', function() {
+
+  butt.value = !butt.value;
+  if (butt.value) {
+  	side = 'right';
+  } else {
+  	side = 'left';
+  }
+	butt.rendNodeButton.innerHTML = side;
+}], {cssStyle: 'color: green'});
+
+// Set initial value for the button
+if (!JXG.exists(butt.value)) {
+	butt.value = false;
+}
+
+let f = function(x){ return Math.sin(x); };
+let plot = board.create('functiongraph',[f,function(){return a.Value();}, function(){return b.Value();}], {strokeWidth : 3, strokeColor: 'black'});
+
+let os = board.create('riemannsum',[f,
+    function(){ return s.Value();}, function(){ return side;},
+    function(){return a.Value();},
+    function(){return b.Value();}
+    ],
+    {fillColor:'#ffff00', fillOpacity:0.3});
+
+board.create('text',[-4, 1,function(){ return 'Sum = '+(JXG.Math.Numerics.riemann(f,s.Value(),side,a.Value(),b.Value())[2].toFixed(4)); }], {fontSize: 32});
+  </script>
+  </body>
+  </html>
