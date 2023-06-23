@@ -49,15 +49,14 @@
 
 
   <script>
-let board = JXG.JSXGraph.initBoard('jxgbox', {axis:true, boundingbox: [-5, 2, 5, -2]});
+let board = JXG.JSXGraph.initBoard('jxgbox', {axis:true, boundingbox: [-3, 2, 7, -2]});
 let s = board.create('slider',[[0.5,-0.5],[4,-0.5],[1,10,100]],{name:'n',snapWidth:1});
-let a = board.create('slider',[[0.5,-1],[4,-1],[-10,-2,0]],{name:'start'});
-let b = board.create('slider',[[0.5,-1.5],[4,-1.5],[0,3,10]],{name:'end'});
+let a = board.create('slider',[[0.5,-1],[4,-1],[-10, 0 ,0]],{name:'start'});
+let b = board.create('slider',[[0.5,-1.5],[4,-1.5],[0, Math.PI, 10]],{name:'end'});
 
 let side = 'left'
 
-let butt = board.create('button', [3, 1.5, 'Left', function() {
-
+let butt = board.create('button', [3, 1.5, 'left', function() {
   butt.value = !butt.value;
   if (butt.value) {
   	side = 'right';
@@ -65,7 +64,7 @@ let butt = board.create('button', [3, 1.5, 'Left', function() {
   	side = 'left';
   }
 	butt.rendNodeButton.innerHTML = side;
-}], {cssStyle: 'color: green', fontSize: 32});
+}], {cssDefaultStyle: 'background: green; height: 2em; color: white;', fontSize: 32});
 
 // Set initial value for the button
 if (!JXG.exists(butt.value)) {
@@ -73,7 +72,9 @@ if (!JXG.exists(butt.value)) {
 }
 
 let f = function(x){ return Math.sin(x); };
-let plot = board.create('functiongraph',[f,function(){return a.Value();}, function(){return b.Value();}], {strokeWidth : 3, strokeColor: 'black'});
+
+let plot = board.create('functiongraph',[f,function(){return a.Value();}, function(){return b.Value();}], 
+{strokeWidth : 3, strokeColor: 'black'});
 
 let os = board.create('riemannsum',[f,
     function(){ return s.Value();}, function(){ return side;},
@@ -82,8 +83,11 @@ let os = board.create('riemannsum',[f,
     ],
     {fillColor:'#ffff00', fillOpacity:0.3});
 
-board.create('text',[-4, 1,function(){ return 'Sum = '+(JXG.Math.Numerics.riemann(f,s.Value(),side,a.Value(),b.Value())[2].toFixed(4)); }], {fontSize: 32});
-  </script>
+board.create('text',[-2, 1,function(){ return 'Soma = '+(JXG.Math.Numerics.riemann(f,s.Value(),side,a.Value(),b.Value())[2].toFixed(4)); }], 
+{fontSize: 32});
+ 
+ 
+ </script>
 
   </body>
   </html>
