@@ -18,21 +18,24 @@
       height: 100%;
       width: 100%;
       margin: 0;
+      background-color: lightgray;
     }
 
     #wrapper {
       display: flex;
       flex-direction: column;
       align-items: center;
-      height: min(90vw, 80vh);
+      height: min(90%, 90vh);
       width: 100%;
-      padding-top: 5%;
+      padding-top: 1%;
+      padding-bottom: 1%;
+      color: blue;
     }
 
     #jxgbox {
       flex: 1;
       width: 80%;
-      /* height: 200px; */
+      height: 90%;
     }
 
     /* .jxgbox {
@@ -42,7 +45,7 @@
 </head>
 
 <body>
-  <div id="wrapper" style="background-color: lightgray; color: blue ">
+  <div id="wrapper">
     A INTEGRAL DEFINIDA
     <div id="jxgbox" class="jxgbox"> </div>
   </div>
@@ -72,7 +75,7 @@
 
     const sumSideText = () => { return side == 'right' ? 'R-' + s.Value() : 'L-' + s.Value() }
 
-    let butt = board.create('button', [3, 1.5, 'left', function () {
+    let butt = board.create('button', [1.5, 1.8, 'left', function () {
       butt.value = !butt.value;
       if (butt.value) {
         side = 'right';
@@ -83,10 +86,21 @@
 
     }], { fontSize: 30 }); //cssDefaultStyle: 'height: 2em; color: white;'
 
+    let buttRandom = board.create('button', [3, 1.8, 'Random', function () {
+      buttRandom.value = !buttRandom.value;
+      if (buttRandom.value) {
+        side = 'random';
+      }
+
+    }], { fontSize: 30 }); //cssDefaultStyle: 'height: 2em; color: white;'
+
     // Set initial values for the button
     if (!JXG.exists(butt.value)) {
       butt.value = false;
       butt.rendNodeButton.innerHTML = sumSideText();
+    }
+    if (!JXG.exists(buttRandom.value)) {
+      buttRandom.value = true;
     }
 
 
