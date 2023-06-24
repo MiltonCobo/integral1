@@ -67,7 +67,7 @@
     });
 
 
-    let s = board.create('slider', [[0.5, -0.5], [4, -0.5], [1, 10, 100]], { name: 'n', snapWidth: 1, size: 12 });
+    let s = board.create('slider', [[0.5, -0.5], [4, -0.5], [1, 5, 50]], { name: 'n', snapWidth: 1, size: 12 });
     let a = board.create('slider', [[0.5, -1], [4, -1], [-10, 0, 0]], { name: 'start', size: 12 });
     let b = board.create('slider', [[0.5, -1.5], [4, -1.5], [0, Math.PI, 10]], { name: 'end', size: 12 });
 
@@ -111,14 +111,21 @@
 
     //s.startAnimation(1, 20);  // runs animation....
 
-
-
     let f = function (x) { return Math.sin(x); };
 
-    let plot = board.create('functiongraph', [f, function () { return a.Value(); }, function () { return b.Value(); }],
-      { strokeWidth: 3, strokeColor: 'black' });
+    let plotf = board.create('functiongraph', [f, () => a.Value(), () => b.Value()],
+      {
+        strokeWidth: 3, strokeColor: 'black', withLabel: true,
+        name: () => 'y = sin(x)', label: {
+          fontSize: 25,
+          position: 'top',
+          color: 'blue',
+          offset: [40, 40],
+          fixed: false
+        }
+      });
 
-    let os = board.create('riemannsum', [f,
+    let riemann = board.create('riemannsum', [f,
       function () { return s.Value(); }, function () { return side; },
       function () { return a.Value(); },
       function () { return b.Value(); }
@@ -126,8 +133,36 @@
       { fillColor: '#ffff00', fillOpacity: 0.3 });
 
 
-    board.create('text', [-2.5, 1, function () { return 'Soma = ' + (JXG.Math.Numerics.riemann(f, s.Value(), () => side, a.Value(), b.Value())[2].toFixed(4)); }],
+    const soma = board.create('text', [-2.5, 1, function () { return 'Soma = ' + (JXG.Math.Numerics.riemann(f, s.Value(), () => side, a.Value(), b.Value())[2].toFixed(4)); }],
       { fontSize: 30 });
+
+    let plotg = board.create('functiongraph', [0, function () { return a.Value(); }, function () { return b.Value(); }],
+      { strokeWidth: 3, strokeColor: 'black' });
+
+
+    const ineq2 = board.create('inequality', [plotg], {
+      fillColor: 'lightgreen',
+      opacity: 0.5,
+      visible: false,
+      inverse: true
+    })
+    const ineq1 = board.create('inequality', [plotf], {
+      fillColor: 'lightgreen',
+      opacity: 0.5,
+      visible: false,
+
+    })
+
+    let region = board.create('curveintersection', [ineq1, ineq2], {
+      fillColor: 'lightgreen',
+      strokeWidth: 0,
+      needsRegularUpdate: true,
+      layer: 0,
+      opacity: 0.4,
+      visible: true//() => chk_region.Value(),
+    })
+
+
 
 
   </script>
